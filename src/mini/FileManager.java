@@ -1,8 +1,15 @@
 package mini;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 // 주문 이력을 파일에 저장하고 불러오는 클래스
 public class FileManager {
@@ -11,7 +18,7 @@ public class FileManager {
 	// final : 상수
 	// static : 인스턴스 없이 사용 가능
 	// 파일 이름은 프로그램이 끝날때까지 변하지 않음
-	static final String FILE_NAME = "order.txt"; // => 고정값
+	static final String FILE_NAME = "test.txt"; // => 고정값
 	
 	// 파일에 주문이력을 쓰는 메소드
 	// 매개변수 : 주문이력
@@ -26,18 +33,97 @@ public class FileManager {
 			BufferedWriter bufferedWriter = new BufferedWriter(writer);
 			
 			bufferedWriter.write(order.toString());
+			bufferedWriter.newLine();
+			
 			bufferedWriter.close(); // 닫기 + 버퍼비우기
 			
 			// 줄바꿈 (둘중 하나만 사용)
 	//		bufferedWriter.writer("\n");
-			bufferedWriter.newLine(); 
+			
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
+		// ctrl + shife + o => 자동 import
+		// 파일에서 주문이력을 읽어오는 메소드
+
+		}
+		
+		
+	public static List<Order> readOrders() {
+		
+		// 주문이력 리스트 생성
+		List<Order> orders = new ArrayList<Order>();
+		
+		try {
+			// 문자 기반 입력 스트림
+			FileReader reader = new FileReader(FILE_NAME);
+			
+			// 파일의 내용을 한줄씩 읽어올 수 있도록 도와주는 보조 스트림
+			BufferedReader bufferedReader = new BufferedReader(reader);
+			
+			while(true) {
+				// 주문이력이 한 줄씩 저장되어 있으므로 한 줄씩 읽어옴
+				String line = bufferedReader.readLine();
+				if(line == null) {
+					break;
+				}
+				
+				// 문자열을 Order 객체로 변환 (파싱)
+				// 이유: 문자열은 통데이터여서 나중에 주문금액을 계산할 수 없음
+				// 필요한 정보만 추출하기 위해 파싱이 필요함
+				String[] arr = line.split(", "); 
+				// [주문번호: 0, 고객명: 둘리, 제품명: 옷, 주문수량: 1, 가격: 1000, 주문일시: 2025-03-07 11:43:37]
+				
+				// 값만 다시 추출하기 위해 2차 파싱
+//				String value1 = arr[0].split(": ")[1]; // [주문번호, 0]
+//				String value2 = arr[1].split(": ")[1]; // [고객명, 둘리]
+//				String value3 = arr[2].split(": ")[1]; // [제품명, 바지]
+//				String value4 = arr[3].split(": ")[1]; // [주문수량, 1]
+//				String value5 = arr[4].split(": ")[1]; // [가격, 15000]
+//				String value6 = arr[5].split(": ")[1]; // [주문일시, 2025-03-07 11:43:37]
+				
+				// 타입에 맞게 변환
+				int value1 = Integer.parseInt(arr[0].split(": ")[1]);  // 0 (string -> int)
+				String value2 = arr[1].split(": ")[1]; // "둘리"
+				String value3 = arr[2].split(": ")[1]; // "바지"
+				int value4 = Integer.parseInt(arr[3].split(": ")[1]); // 1 (string -> int)
+				int value5 = Integer.parseInt(arr[4].split(": ")[1]); // 15000 (string -> int)
+				// String -> LocalDateTime
+				String value6 = arr[5].split(": ")[1]; // 2025-03-07 11:43:37
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				LocalDateTime localDateTime = LocalDateTime.parse(value6, formatter);
+				
+				// 주문이력 생성
+				Order order = new Order(value1, value2, value3, value4, value5, localDateTime);
+				
+				// 리스트에 추가
+				orders.add(order);
+			}
+			bufferedReader.close();
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return orders;
 	}
 	
 	
 	
 }
+
+//
+//// 2차 파씽
+//String value1 = arr[0].split(": ")[1];
+//String value2 = arr[1].split(": ")[1]; // 게속 밑으로 5까지 늘리면 됨
+//
+//// 주문 이력 생성
+//Order order = new Order
+
+
+

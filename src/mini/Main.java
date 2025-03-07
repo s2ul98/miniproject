@@ -39,10 +39,10 @@ public class Main {
 	        	 String productName = scanner.nextLine();
 	        	 
 	        	 System.out.println("상품수량: ");
-	        	 String productCnt = scanner.nextLine();
+	        	 int productCnt = scanner.nextInt();
 	        	 
 	        	 System.out.println("상품가격: ");
-	        	 String productPrice = scanner.nextLine();
+	        	 int productPrice = scanner.nextInt();
 	        	 
 	        	 // 상품 주문 정보 생성
 	        	 Order order = new Order(customerName, productName, choice, choice);
@@ -52,7 +52,7 @@ public class Main {
 	        	//  FileManager.saveOrder(order);
 	        	 
 	         } else if(choice == 2) {
-	        	 
+	        	 FileManager.readOrders();
 	         } else if(choice == 3) {
 	        	 
 	         } else if(choice == 4) {
