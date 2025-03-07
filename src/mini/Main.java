@@ -1,5 +1,6 @@
 package mini;
 
+import java.io.File;
 import java.util.Scanner;
 
 // 사용자의 입력을 받아서 처리하는 메인 프로그램
@@ -45,16 +46,21 @@ public class Main {
 	        	 int productPrice = scanner.nextInt();
 	        	 
 	        	 // 상품 주문 정보 생성
-	        	 Order order = new Order(customerName, productName, choice, choice);
+	        	 Order order = new Order(customerName, productName, productCnt, productPrice);
 	        	 System.out.println(order);
 	        	 
 	        	 // 파일에 주문 이력 쓰기
-	        	//  FileManager.saveOrder(order);
+	        	  FileManager.saveOrder(order);
 	        	 
 	         } else if(choice == 2) {
 	        	 FileManager.readOrders();
 	         } else if(choice == 3) {
+	        	 System.out.println("고객명: ");
+	        	 String customerName = scanner.nextLine();
 	        	 
+	        	long count = FileManager.getCountByCustomer(customerName);
+	        	System.out.println("주문건수: " + count);
+	        	
 	         } else if(choice == 4) {
 	        	 
 	         } else if(choice == 5) {

@@ -6,10 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // 주문 이력을 파일에 저장하고 불러오는 클래스
 public class FileManager {
@@ -113,17 +115,49 @@ public class FileManager {
 		return orders;
 	}
 	
+	// 특정 회원의 주문 건수를 계산하는 함수
+	// 매개변수 : 회원의 이름
+	// 리턴값: 주문건수
+	public static long getCountByCustomer(String customerName) {
+		
+		// 위에서 정의한 함수를 사용하여 파일에서 주문이력 조회
+		List<Order> orders = readOrders();
+		
+		// 스트림을 이용하여 특정회원을 찾고 주문건수 구하기
+		// filter : 스트림의 요소 중에서 특정 조건을 만족하는 요소만 추출 
+		long count = orders.stream()
+						   .filter(order -> order.customerName.equals(customerName))
+						   .count();
+		return count;
+	}
 	
-	
+	// 특정 회원의 총 주문금액을 계산하는 함수
+	// 매개변수 : 회원의 이름
+	// 리턴값 : 주문금액
+	public static void getTotalPriceByCustomer(String customerName) {
+		
+		// 위에 있는 함수를 재사용하여 주문 리스트 조회
+		List<Order> orders = readOrders();
+		
+		orders.stream()
+			  .filter(order -> order.customerName.equals(customerName));
+			//  .mapToInt(order -> order.)
+	}
+	public static void getOrderByDate(String date) {
+		
+		// 문자열을 LocalDate로 변환
+		LocalDate localDate = LocalDate.parse(date);
+		
+		// 주문 이력 리스트 조회
+		List<Order> orders = readOrders();
+		
+		// 스트림을 이용해서 특정일에 들어온 주문 이력만 조회
+		orders.stream()
+			  .filter(order -> localDate.equals(order.orderDate.toLocalDate()))
+			  .collect(Collectors.toList());
+	} 
 }
 
-//
-//// 2차 파씽
-//String value1 = arr[0].split(": ")[1];
-//String value2 = arr[1].split(": ")[1]; // 게속 밑으로 5까지 늘리면 됨
-//
-//// 주문 이력 생성
-//Order order = new Order
 
 
 
